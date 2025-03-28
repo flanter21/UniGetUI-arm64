@@ -3,6 +3,16 @@ run-name: Build UniGetUI (no tests)
 on:
   workflow_dispatch:
       inputs:
+        build_binary:
+          description: ''
+          default: 'Build installer'
+          type: choice
+          options:
+            - Build new
+            - Use previous run artifact
+        run_id:
+          description: 'If not building installer, give run id of previous artifact.'
+          type: number
         build_installer:
           description: 'Build installer'
           type: boolean
@@ -52,7 +62,8 @@ jobs:
           ignore: build_installer
           format: json
 
-  build:
+  build_binary:
+    if: ${{ inputs.build_binary == 'Build new' }}
     runs-on: windows-latest
     needs: get-selected
     strategy:
@@ -76,9 +87,9 @@ jobs:
           include-hidden-files: true
 
   build_installer:
-    if: ${{ inputs.build_installer }}
+    if: ${{ inputs.build_installer && ( failure() || success() ) }}
     runs-on: windows-latest
-    needs: [build, get-selected]
+    needs: [build_binary, get-selected]
     strategy:
       matrix:
         architecture: ${{ fromJSON(needs.get-selected.outputs.selected) }}
@@ -104,6 +115,7 @@ jobs:
         with:
           name: UniGetUI-build-${{ matrix.architecture }}
           path: unigetui_bin
+          run-id: ${{ inputs.run_id || github.run_id }}
 
       - name: Show tree
         run: |
