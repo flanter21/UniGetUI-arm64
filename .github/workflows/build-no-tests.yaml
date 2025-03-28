@@ -2,18 +2,76 @@ name: Build UniGetUI (no tests)
 run-name: Build UniGetUI (no tests)
 on:
   workflow_dispatch:
+      inputs:
+        build_installer:
+          description: 'Build installer'
+          type: boolean
+          required: true
+          default: true
+        repository:
+          description: 'Repo'
+          default: 'marticliment/UniGetUI'
+          required: true
+          type: string
+        ref:
+          description: 'Branch/tag/ref'
+          default: ""
+          required: true
+          type: string
+        verbosity:
+          description: 'Build verbosity'
+          required: true
+          default: 'minimal'
+          type: choice
+          options:
+            - quiet
+            - minimal
+            - normal
+            - detailed
+            - diagnostic
+        target:
+          description: 'Target architecture'
+          required: true
+          default: 'win-arm64'
+          type: choice
+          options:
+            - win-x64
+            - win-x86
+            - win-arm64
+
 jobs:
-  BuildForARM64:
+  build:
     runs-on: windows-latest
     steps:
       - name: Clone repo
         uses: actions/checkout@master
         with:
-          repository: marticliment/UniGetUI
+          repository: ${{ inputs.repository }}
+          ref: ${{ inputs.ref }}
+
       - name: Build
-        run: dotnet publish src\UniGetUi\UniGetUi.csproj --configuration Release --runtime win-arm64 --self-contained --verbosity minimal
-      - name: Upload artifacts
+        run: dotnet publish src\UniGetUi\UniGetUi.csproj --configuration Release --runtime ${{ inputs.target }} --self-contained --verbosity ${{ inputs.verbosity }}
+
+      - name: Upload build as artifact
         uses: actions/upload-artifact@v4
         with:
-          path: .\src\UniGetUI\bin\**
+          name: UniGetUI-${{ inputs.target }}
+          path: ./src/UniGetUI/bin/**/publish
+          include-hidden-files: true
+
+      - name: Change directory
+        run: cd .\src\UniGetUI\bin\*\Release\*\${{ inputs.target }}\publish
+
+      - name: Build installer
+        if: ${{ inputs.build_installer }}
+        uses: Minionguyjpro/Inno-Setup-Action@v1.2.5
+          with:
+            path: UniGetUI.iss
+
+      - name: Upload installer as artifact
+        if: ${{ inputs.build_installer }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: UniGetUI-Installer-${{ inputs.target }}
+          path: "UniGetUI Installer.exe"
           include-hidden-files: true
