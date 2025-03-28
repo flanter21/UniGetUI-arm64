@@ -23,6 +23,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Echo inputs
-        run: |
-          echo ${{ toJSON(inputs) }}
-          echo ${{ steps.get-selected-step.outputs.selected }}
+        run: echo ${{ steps.get-selected-step.outputs.selected }}
+        #run: echo ${{ toJSON(inputs) }}
