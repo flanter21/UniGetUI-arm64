@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 jobs:
   BuildForARM64:
-    runs-on: windows-latest-arm
+    runs-on: windows-latest
     steps:
       - name: Clone repo
         uses: actions/checkout@master
@@ -15,5 +15,5 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          path: .\src\UniGetUI\bin\Release
+          path: .\src\UniGetUI\bin\**
           include-hidden-files: true
