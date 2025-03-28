@@ -67,8 +67,9 @@ jobs:
 
       - name: Build and enter output directory
         run: |
-          dotnet publish src\UniGetUi\UniGetUi.csproj --configuration Release --runtime ${{ matrix.architecture }} --self-contained --verbosity ${{ inputs.verbosity }}
+          dotnet publish src\UniGetUI\UniGetUI.csproj --configuration Release --runtime ${{ matrix.architecture }} --self-contained --verbosity ${{ inputs.verbosity }}
           cd src\UniGetUI\bin\Release\net8.0-windows10.0.26100.0\${{ matrix.architecture }}\publish
+
       - name: Upload build as artifact
         uses: actions/upload-artifact@v4
         with:
