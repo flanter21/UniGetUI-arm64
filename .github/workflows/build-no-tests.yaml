@@ -65,8 +65,8 @@ jobs:
       - name: Build installer
         if: ${{ inputs.build_installer }}
         uses: Minionguyjpro/Inno-Setup-Action@v1.2.5
-          with:
-            path: UniGetUI.iss
+        with:
+          path: UniGetUI.iss
 
       - name: Upload installer as artifact
         if: ${{ inputs.build_installer }}
