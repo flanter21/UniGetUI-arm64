@@ -93,8 +93,10 @@ jobs:
         with:
           repository: ${{ inputs.repository }}
           ref: ${{ inputs.ref }}    
-          sparse-checkout: UniGetUI.iss
-
+          sparse-checkout: |
+            UniGetUI.iss
+            InstallerExtras
+            src\UniGetUI\Assets\Images
       - name: Build installer
         uses: Minionguyjpro/Inno-Setup-Action@v1.2.5
         with:
