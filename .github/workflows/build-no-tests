@@ -1,5 +1,5 @@
-name: Build UniGetUI
-run-name: Build UniGetUI
+name: Build UniGetUI (no tests)
+run-name: Build UniGetUI (no tests)
 on:
   workflow_dispatch:
 jobs:
