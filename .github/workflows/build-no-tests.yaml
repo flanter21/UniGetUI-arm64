@@ -65,16 +65,14 @@ jobs:
           repository: ${{ inputs.repository }}
           ref: ${{ inputs.ref }}
 
-      - name: Build and enter output directory
-        run: |
-          dotnet publish src\UniGetUI\UniGetUI.csproj --configuration Release --runtime ${{ matrix.architecture }} --self-contained --verbosity ${{ inputs.verbosity }}
-          cd src\UniGetUI\bin\Release\net8.0-windows10.0.26100.0\${{ matrix.architecture }}\publish
+      - name: Build
+        run: dotnet publish src\UniGetUI\UniGetUI.csproj --configuration Release --runtime ${{ matrix.architecture }} --self-contained --verbosity ${{ inputs.verbosity }}
 
       - name: Upload build as artifact
         uses: actions/upload-artifact@v4
         with:
           name: UniGetUI-build-${{ matrix.architecture }}
-          path: .
+          path: src\UniGetUI\bin\Release\net8.0-windows10.0.26100.0\${{ matrix.architecture }}\publish
           include-hidden-files: true
 
   build_installer:
