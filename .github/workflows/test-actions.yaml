@@ -20,6 +20,7 @@ jobs:
         uses: joao-zanutto/get-selected@v1.1.1
 
   build:
+    needs: get-selected
     runs-on: ubuntu-latest
     steps:
       - name: Echo inputs
