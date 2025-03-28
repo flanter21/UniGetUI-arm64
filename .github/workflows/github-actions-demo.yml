@@ -1,6 +1,6 @@
-name: GitHub Actions Demo
-run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
-on: [push]
+run-name: Build UniGetUI
+on:
+  workflow_dispatch:
 jobs:
   BuildForARM64:
     runs-on: windows-latest
@@ -16,7 +16,8 @@ jobs:
           repository: marticliment/UniGetUI
       - name: Download pip dependencies
         run: | 
-          #python3 -m venv .
+          cd UniGetUI
+          python3 -m venv .
           #powershell 
           pip install -r requirements.txt
       - name: Build
