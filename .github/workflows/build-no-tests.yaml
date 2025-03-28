@@ -97,6 +97,7 @@ jobs:
           sparse-checkout: |
             InstallerExtras
             src\UniGetUI\Assets\Images
+            src\UniGetUI.PackageEngine.Managers.Chocolatey\choco-cli
 
       - name: Get build from other job
         uses: actions/download-artifact@v4
