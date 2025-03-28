@@ -18,11 +18,16 @@ jobs:
     steps:
       - id: get-selected-step
         uses: joao-zanutto/get-selected@v1.1.1
+        with:
+          format: json
 
   build:
     needs: get-selected
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        variant: ${{ needs.get-selected.outputs.selected }}
     steps:
       - name: Echo inputs
-        run: echo ${{ needs.get-selected.outputs.selected }}
+        run: echo ${{ matrix.variant }}
         #run: echo ${{ toJSON(inputs) }}
