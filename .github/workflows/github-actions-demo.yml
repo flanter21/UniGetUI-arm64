@@ -1,3 +1,4 @@
+name: Build UniGetUI
 run-name: Build UniGetUI
 on:
   workflow_dispatch:
@@ -5,21 +6,18 @@ jobs:
   BuildForARM64:
     runs-on: windows-latest
     steps:
-      - name: Set up Python
+      - name: Set up Python and dotnet
         uses: actions/setup-python@v5
         with:
           python-version: "3.10"
           #architecture: 'x64'
+      #- uses: actions/setup-dotnet@v4
+       #   with:
+        #    dotnet-version: 8x
       - name: Clone repo
         uses: actions/checkout@master
         with:
           repository: marticliment/UniGetUI
-      - name: Download pip dependencies
-        run: | 
-          cd UniGetUI
-          python3 -m venv .
-          #powershell 
-          pip install -r requirements.txt
       - name: Build
         run: .\build_release.bat
       - name: Upload artifacts
