@@ -87,7 +87,7 @@ jobs:
           include-hidden-files: true
 
   build_installer:
-    if: ${{ inputs.build_installer && ( failure() || success() || cancelled() ) }}
+    if: ${{ always() && ( inputs.build_installer == 'Build new' || needs.build_binary.result == 'skipped' ) }}
     runs-on: windows-latest
     needs: [build_binary, get-selected]
     strategy:
