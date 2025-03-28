@@ -66,10 +66,7 @@ jobs:
           ref: ${{ inputs.ref }}
 
       - name: Build
-        run: |
-          dotnet publish src\UniGetUi\UniGetUi.csproj --configuration Release --runtime ${{ matrix.architecture }} --self-contained --verbosity ${{ inputs.verbosity }}
-          copy UniGetUI.iss .\src\UniGetUI\bin\Release\*\${{ matrix.architecture }}\publish
-          cd .\src\UniGetUI\bin\Release\net8.0-windows10.0.26100.0\${{ matrix.architecture }}\publish
+        run: dotnet publish src\UniGetUi\UniGetUi.csproj --configuration Release --runtime ${{ matrix.architecture }} --self-contained --verbosity ${{ inputs.verbosity }}
 
       - name: Upload build as artifact
         uses: actions/upload-artifact@v4
