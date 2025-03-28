@@ -26,7 +26,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        variant: ${{ needs.get-selected.outputs.selected }}
+        variant: fromJSON( ${{ needs.get-selected.outputs.selected }} )
     steps:
       - name: Echo inputs
         run: echo ${{ matrix.variant }}
