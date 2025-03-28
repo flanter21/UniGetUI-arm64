@@ -15,8 +15,8 @@ on:
           type: string
         ref:
           description: 'Branch/tag/ref'
-          default: ""
-          required: true
+          default: ''
+          required: false
           type: string
         verbosity:
           description: 'Build verbosity'
