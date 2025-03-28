@@ -65,14 +65,15 @@ jobs:
           repository: ${{ inputs.repository }}
           ref: ${{ inputs.ref }}
 
-      - name: Build
-        run: dotnet publish src\UniGetUi\UniGetUi.csproj --configuration Release --runtime ${{ matrix.architecture }} --self-contained --verbosity ${{ inputs.verbosity }}
-
+      - name: Build and enter output directory
+        run: |
+          dotnet publish src\UniGetUi\UniGetUi.csproj --configuration Release --runtime ${{ matrix.architecture }} --self-contained --verbosity ${{ inputs.verbosity }}
+          cd src\UniGetUI\bin\Release\net8.0-windows10.0.26100.0\${{ matrix.architecture }}\publish
       - name: Upload build as artifact
         uses: actions/upload-artifact@v4
         with:
           name: UniGetUI-build-${{ matrix.architecture }}
-          path: ./src/UniGetUI/bin/**/publish
+          path: .
           include-hidden-files: true
 
   build_installer:
@@ -83,15 +84,6 @@ jobs:
       matrix:
         architecture: ${{ fromJSON(needs.get-selected.outputs.selected) }}
     steps:
-      - name: Get build from other job
-        uses: actions/download-artifact@v4
-        with:
-          name: UniGetUI-build-${{ matrix.architecture }}
-          path: unigetui_bin
-
-      - name: Show tree
-        run: tree
-
       - name: Get UniGetUI.iss
         uses: actions/checkout@master
         with:
@@ -107,13 +99,21 @@ jobs:
             InstallerExtras
             src\UniGetUI\Assets\Images
 
+      - name: Get build from other job
+        uses: actions/download-artifact@v4
+        with:
+          name: UniGetUI-build-${{ matrix.architecture }}
+          path: unigetui_bin
+
+      - name: Show tree
+        run: |
+          echo %cd%
+          tree
+
       - name: Build installer
         uses: Minionguyjpro/Inno-Setup-Action@v1.2.5
         with:
           path: UniGetUI.iss
-        
-      - name: Show dir
-        run: dir
 
       - name: Upload installer as artifact
         uses: actions/download-artifact@v4
