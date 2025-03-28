@@ -6,7 +6,6 @@ on:
         build_installer:
           description: 'Build installer'
           type: boolean
-          required: true
           default: true
         repository:
           description: 'Repo'
@@ -15,8 +14,6 @@ on:
           type: string
         ref:
           description: 'Branch/tag/ref'
-          default: ''
-          required: false
           type: string
         verbosity:
           description: 'Build verbosity'
@@ -29,19 +26,38 @@ on:
             - normal
             - detailed
             - diagnostic
-        target:
-          description: 'Target architecture'
+        win-x64:
+          description: 'Build for x64'
           required: true
-          default: 'win-arm64'
-          type: choice
-          options:
-            - win-x64
-            - win-x86
-            - win-arm64
+          type: boolean
+        win-x86:
+          description: 'Build for x86'
+          required: true
+          type: boolean
+        win-arm64:
+          description: 'Build for arm64'
+          required: true
+          default: true
+          type: boolean
 
 jobs:
+  get-selected:
+    runs-on: ubuntu-latest
+    outputs: # Set this to consume the output on other job
+      selected: ${{ steps.get-selected-step.outputs.selected }}
+    steps:
+      - id: get-selected-step
+        uses: joao-zanutto/get-selected@v1.1.1
+        with:
+          ignore: build_installer
+          format: json
+
   build:
     runs-on: windows-latest
+    needs: get-selected
+    strategy:
+      matrix:
+        architecture: ${{ fromJSON(needs.get-selected.outputs.selected) }}
     steps:
       - name: Clone repo
         uses: actions/checkout@master
@@ -50,32 +66,46 @@ jobs:
           ref: ${{ inputs.ref }}
 
       - name: Build
-        run: dotnet publish src\UniGetUi\UniGetUi.csproj --configuration Release --runtime ${{ inputs.target }} --self-contained --verbosity ${{ inputs.verbosity }}
+        run: |
+          dotnet publish src\UniGetUi\UniGetUi.csproj --configuration Release --runtime ${{ matrix.architecture }} --self-contained --verbosity ${{ inputs.verbosity }}
+          copy UniGetUI.iss .\src\UniGetUI\bin\Release\*\${{ matrix.architecture }}\publish
+          cd .\src\UniGetUI\bin\Release\net8.0-windows10.0.26100.0\${{ matrix.architecture }}\publish
 
       - name: Upload build as artifact
         uses: actions/upload-artifact@v4
         with:
-          name: UniGetUI-${{ inputs.target }}
+          name: UniGetUI-build-${{ matrix.architecture }}
           path: ./src/UniGetUI/bin/**/publish
           include-hidden-files: true
 
-      - name: Copy .iss to build dir and 
-        if: ${{ inputs.build_installer }}
-        run: | 
-          dir src\UniGetUI\bin\Release
-          copy UniGetUI.iss .\src\UniGetUI\bin\Release\*\${{ inputs.target }}\publish
-          cd .\src\UniGetUI\bin\Release\*\${{ inputs.target }}\publish
+  build_installer:
+    if: ${{ inputs.build_installer }}
+    runs-on: windows-latest
+    needs: [build, get-selected]
+    strategy:
+      matrix:
+        architecture: ${{ fromJSON(needs.get-selected.outputs.selected) }}
+    steps:
+      - name: Get build from other job
+        uses: actions/download-artifact@v4
+        with:
+          name: UniGetUI-build-${{ matrix.architecture }}
+
+      - name: Get UniGetUI.iss
+        uses: actions/checkout@master
+        with:
+          repository: ${{ inputs.repository }}
+          ref: ${{ inputs.ref }}    
+          sparse-checkout: UniGetUI.iss
 
       - name: Build installer
-        if: ${{ inputs.build_installer }}
         uses: Minionguyjpro/Inno-Setup-Action@v1.2.5
         with:
           path: UniGetUI.iss
 
       - name: Upload installer as artifact
-        if: ${{ inputs.build_installer }}
-        uses: actions/upload-artifact@v4
+        uses: actions/download-artifact@v4
         with:
-          name: UniGetUI-Installer-${{ inputs.target }}
+          name: UniGetUI-Installer-${{ matrix.architecture }}
           path: "UniGetUI Installer.exe"
           include-hidden-files: true
