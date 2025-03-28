@@ -1,0 +1,19 @@
+name: Build UniGetUI
+run-name: Build UniGetUI
+on:
+  workflow_dispatch:
+jobs:
+  BuildForARM64:
+    runs-on: windows-latest-arm
+    steps:
+      - name: Clone repo
+        uses: actions/checkout@master
+        with:
+          repository: marticliment/UniGetUI
+      - name: Build
+        run: dotnet publish src\UniGetUi\UniGetUi.csproj --configuration Release --runtime win-arm64 --self-contained
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          path: .\src\UniGetUI\bin\Release
+          include-hidden-files: true
