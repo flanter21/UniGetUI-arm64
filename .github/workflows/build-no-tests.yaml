@@ -59,8 +59,11 @@ jobs:
           path: ./src/UniGetUI/bin/**/publish
           include-hidden-files: true
 
-      - name: Change directory
-        run: cd .\src\UniGetUI\bin\*\Release\*\${{ inputs.target }}\publish
+      - name: Copy .iss to build dir and 
+        if: ${{ inputs.build_installer }}
+        run: | 
+          cp UniGetUI.iss src\UniGetUI\bin\Release\*\${{ inputs.target }}\publish
+          cd .\src\UniGetUI\bin\Release\*\${{ inputs.target }}\publish
 
       - name: Build installer
         if: ${{ inputs.build_installer }}
