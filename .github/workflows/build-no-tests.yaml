@@ -87,20 +87,33 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: UniGetUI-build-${{ matrix.architecture }}
+          path: unigetui_bin
+
+      - name: Show tree
+        run: tree
 
       - name: Get UniGetUI.iss
+        uses: actions/checkout@master
+        with:
+          sparse-checkout: UniGetUI.iss
+          path: .\
+
+      - name: Get other required assets
         uses: actions/checkout@master
         with:
           repository: ${{ inputs.repository }}
           ref: ${{ inputs.ref }}    
           sparse-checkout: |
-            UniGetUI.iss
             InstallerExtras
             src\UniGetUI\Assets\Images
+
       - name: Build installer
         uses: Minionguyjpro/Inno-Setup-Action@v1.2.5
         with:
           path: UniGetUI.iss
+        
+      - name: Show dir
+        run: dir
 
       - name: Upload installer as artifact
         uses: actions/download-artifact@v4
