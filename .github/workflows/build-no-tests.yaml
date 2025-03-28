@@ -11,7 +11,7 @@ jobs:
         with:
           repository: marticliment/UniGetUI
       - name: Build
-        run: dotnet publish src\UniGetUi\UniGetUi.csproj --configuration Release --runtime win-arm64 --self-contained
+        run: dotnet publish src\UniGetUi\UniGetUi.csproj --configuration Release --runtime win-arm64 --self-contained --verbosity minimal
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
