@@ -11,8 +11,18 @@ on:
           type: boolean
 
 jobs:
+  get-selected:
+    runs-on: ubuntu-latest
+    outputs: # Set this to consume the output on other job
+      selected: ${{ steps.get-selected-step.outputs.selected }}
+    steps:
+      - id: get-selected-step
+        uses: joao-zanutto/get-selected@v1.1.1
+
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Clone repo
-        run: echo ${{ toJSON(inputs) }}
+      - name: Echo inputs
+        run: |
+          echo ${{ toJSON(inputs) }}
+          echo ${{ steps.get-selected-step.outputs.selected }}
