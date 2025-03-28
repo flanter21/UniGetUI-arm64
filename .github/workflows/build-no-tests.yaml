@@ -62,7 +62,8 @@ jobs:
       - name: Copy .iss to build dir and 
         if: ${{ inputs.build_installer }}
         run: | 
-          cp UniGetUI.iss src\UniGetUI\bin\Release\*\${{ inputs.target }}\publish
+          dir src\UniGetUI\bin\Release
+          copy UniGetUI.iss .\src\UniGetUI\bin\Release\*\${{ inputs.target }}\publish
           cd .\src\UniGetUI\bin\Release\*\${{ inputs.target }}\publish
 
       - name: Build installer
