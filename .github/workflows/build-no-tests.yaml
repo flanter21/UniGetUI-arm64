@@ -93,11 +93,6 @@ jobs:
           sparse-checkout: UniGetUI.iss
           path: .\
 
-      - name: Apply patch to disable code signing
-        run: |
-          tree /f
-          git apply --directory=UniGetUI-arm64/UniGetUI-arm64 disable-signing.patch 
-
       - name: Get other required assets
         uses: actions/checkout@master
         with:
@@ -119,7 +114,9 @@ jobs:
       - name: Show tree
         run: |
           echo %cd%
-          tree
+          tree /f
+      - name: Apply patch to disable code signing
+        run: git apply disable-signing.patch 
 
       - name: Build installer
         uses: Minionguyjpro/Inno-Setup-Action@v1.2.5
