@@ -98,7 +98,7 @@ jobs:
         with:
           repository: ${{ inputs.repository }}
           ref: ${{ inputs.ref }}
-          clean: false
+          clean: 'false'
           sparse-checkout: |
             InstallerExtras
             src\UniGetUI\Assets\Images
