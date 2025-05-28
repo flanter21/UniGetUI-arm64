@@ -115,8 +115,11 @@ jobs:
       - name: Show tree
         run: tree /f
 
-      - name: Apply patch to disable code signing
-        run: git apply ..\disable-signing.patch 
+      - name: Apply patch to disable code signing and replace C
+        run: git apply --directory=installer disable-signing.patch
+
+      - name: Overwrite CodeDependencies.iss
+        run: move /y CodeDependencies.iss installer\InstallerExtras
 
       - name: Build installer
         uses: Minionguyjpro/Inno-Setup-Action@v1.2.5
