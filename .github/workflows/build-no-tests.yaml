@@ -93,6 +93,9 @@ jobs:
           sparse-checkout: UniGetUI.iss
           path: .\
 
+      - name: Apply patch to disable code signing
+        run: git apply disable-signing.patch
+
       - name: Get other required assets
         uses: actions/checkout@master
         with:

@@ -1,0 +1,17 @@
+diff --git a/UniGetUI.iss b/UniGetUI.iss
+--- a/UniGetUI.iss
++++ b/UniGetUI.iss
+@@ -35,10 +35,10 @@ PrivilegesRequiredOverridesAllowed=dialog
+ OutputBaseFilename=UniGetUI Installer
+ OutputDir=.     
+ ; Comment line below to disable digital signature of installer
+-SignTool=azsign
++;SignTool=azsign
+ 
+-SignedUninstaller=yes
+-SignedUninstallerDir=InstallerExtras\
++;SignedUninstaller=yes
++;SignedUninstallerDir=InstallerExtras\
+ MinVersion=10.0
+ SetupIconFile=src\UniGetUI\Assets\Images\icon.ico
+ UninstallDisplayIcon={app}\UniGetUI.exe
