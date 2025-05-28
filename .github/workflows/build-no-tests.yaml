@@ -97,7 +97,8 @@ jobs:
         uses: actions/checkout@master
         with:
           repository: ${{ inputs.repository }}
-          ref: ${{ inputs.ref }}    
+          ref: ${{ inputs.ref }}
+          clean: false
           sparse-checkout: |
             InstallerExtras
             src\UniGetUI\Assets\Images
@@ -112,11 +113,9 @@ jobs:
           run-id: ${{ inputs.run_id || github.run_id }}
 
       - name: Show tree
-        run: |
-          cd
-          tree /f
+        run: tree /f D:
       - name: Apply patch to disable code signing
-        run: git apply ..\disable-signing.patch 
+        run: git apply disable-signing.patch 
 
       - name: Build installer
         uses: Minionguyjpro/Inno-Setup-Action@v1.2.5
