@@ -115,7 +115,7 @@ jobs:
       - name: Show tree
         run: tree /f
 
-      - name: Apply patch to disable code signing and replace C
+      - name: Apply patch to disable code signing
         run: git apply --directory=installer disable-signing.patch
 
       - name: Overwrite CodeDependencies.iss
