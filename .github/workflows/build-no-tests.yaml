@@ -94,7 +94,7 @@ jobs:
           path: .\
 
       - name: Apply patch to disable code signing
-        run: git apply disable-signing.patch
+        run: git apply --directory=UniGetUI-arm64 disable-signing.patch 
 
       - name: Get other required assets
         uses: actions/checkout@master
