@@ -113,7 +113,7 @@ jobs:
 
       - name: Show tree
         run: |
-          echo %cd%
+          cd
           tree /f
       - name: Apply patch to disable code signing
         run: git apply ..\disable-signing.patch 
