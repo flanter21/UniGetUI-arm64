@@ -132,4 +132,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: UniGetUI-Installer-${{ matrix.architecture }}
-          path: "UniGetUI Installer.exe"
+          path: "installer/UniGetUI Installer.exe"
