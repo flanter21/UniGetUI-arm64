@@ -98,7 +98,7 @@ jobs:
         with:
           repository: ${{ inputs.repository }}
           ref: ${{ inputs.ref }}
-          clean: 'false'
+          path: installer
           sparse-checkout: |
             InstallerExtras
             src\UniGetUI\Assets\Images
@@ -108,7 +108,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: UniGetUI-build-${{ matrix.architecture }}
-          path: unigetui_bin
+          path: installer/unigetui_bin
           github-token: ${{ github.token }}
           run-id: ${{ inputs.run_id || github.run_id }}
 
@@ -116,7 +116,7 @@ jobs:
         run: tree /f
 
       - name: Apply patch to disable code signing
-        run: git apply disable-signing.patch 
+        run: git apply ..\disable-signing.patch 
 
       - name: Build installer
         uses: Minionguyjpro/Inno-Setup-Action@v1.2.5
