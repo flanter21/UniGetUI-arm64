@@ -116,7 +116,7 @@ jobs:
           echo %cd%
           tree /f
       - name: Apply patch to disable code signing
-        run: git apply disable-signing.patch 
+        run: git apply ..\disable-signing.patch 
 
       - name: Build installer
         uses: Minionguyjpro/Inno-Setup-Action@v1.2.5
