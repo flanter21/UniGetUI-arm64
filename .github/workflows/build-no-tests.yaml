@@ -113,7 +113,8 @@ jobs:
           run-id: ${{ inputs.run_id || github.run_id }}
 
       - name: Show tree
-        run: tree /f D:
+        run: tree /f
+
       - name: Apply patch to disable code signing
         run: git apply disable-signing.patch 
 
